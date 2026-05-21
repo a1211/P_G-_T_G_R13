@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مختبر المشاريع المتكامل</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 900px;
+        }
+        .card {
+            background-color: #2d3748;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-primary {
+            background-color: #4299e1;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #3182ce;
+        }
+        .btn-secondary {
+            background-color: #ecc94b;
+            color: #2d3748;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+        }
+        .btn-secondary:hover {
+            background-color: #d69e2e;
+        }
+        .btn-danger {
+            background-color: #e53e3e;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+        }
+        .btn-danger:hover {
+            background-color: #c53030;
+        }
+        .progress-bar-container {
+            background-color: #4a5568;
+            border-radius: 0.25rem;
+            height: 1rem;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background-color: #48bb78;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: #2d3748;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 500px;
+        }
+        .hidden {
+            display: none;
+        }
+        .step-indicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .step-indicator.active {
+            background-color: #48bb78;
+        }
+        .step-indicator.completed {
+            background-color: #38a169;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-6">
+        <h1 class="text-4xl font-bold text-center mb-8">🧪 مختبر المشاريع المتكامل</h1>
+        <p class="text-center text-gray-400 mb-8">من فكرتك إلى شريكك إلى عقدك – إلى لوحة تحكم مشروعك</p>
+
+        <!-- Step Indicators -->
+        <div class="flex justify-center items-center mb-8">
+            <div id="step-1-indicator" class="step-indicator active">1</div>
+            <div class="w-12 h-1 bg-gray-600 mx-2"></div>
+            <div id="step-2-indicator" class="step-indicator">2</div>
+            <div class="w-12 h-1 bg-gray-600 mx-2"></div>
+            <div id="step-3-indicator" class="step-indicator">3</div>
+            <div class="w-12 h-1 bg-gray-600 mx-2"></div>
+            <div id="step-4-indicator" class="step-indicator">4</div>
+        </div>
+
+        <!-- Step 1: Idea Evaluation -->
+        <div id="step-1" class="card mb-8">
+            <h2 class="text-2xl font-semibold mb-4">🔍 الخطوة 1: هل فكرتك جاهزة للبناء؟</h2>
+            <p class="mb-4">أجب عن الأسئلة التالية بصدق:</p>
+            <div class="mb-4">
+                <label class="flex items-center mb-2">
+                    <input type="checkbox" id="iq1" class="form-checkbox h-5 w-5 text-blue-600" onchange="evaluateIdea()">
+                    <span class="ml-2 text-gray-300">تحدثت مع 3 أشخاص على الأقل يعانون من هذه المشكلة فعلاً.</span>
+                </label>
+                <label class="flex items-center mb-2">
+                    <input type="checkbox" id="iq2" class="form-checkbox h-5 w-5 text-blue-600" onchange="evaluateIdea()">
+                    <span class="ml-2 text-gray-300">أحدهم على الأقل قال إنه سيدفع مقابل حل هذه المشكلة.</span>
+                </label>
+                <label class="flex items-center mb-2">
+                    <input type="checkbox" id="iq3" class="form-checkbox h-5 w-5 text-blue-600" onchange="evaluateIdea()">
+                    <span class="ml-2 text-gray-300">يمكنني بناء نسخة أولى (MVP) خلال أسبوعين.</span>
+                </label>
+                <label class="flex items-center mb-2">
+                    <input type="checkbox" id="iq4" class="form-checkbox h-5 w-5 text-blue-600" onchange="evaluateIdea()">
+                    <span class="ml-2 text-gray-300">أعرف أين أجد المستخدمين الأوائل (مجموعة، منتدى، منصة).</span>
+                </label>
+            </div>
+            <button id="evaluate-idea-btn" class="btn-primary mb-4" onclick="evaluateIdea()">تقييم الفكرة</button>
+            <div id="idea-feedback" class="p-3 rounded mt-4 text-sm"></div>
+            <button id="to-step-2-from-1" class="btn-primary mt-4 float-left" onclick="nextStep()">التالي ←</button>
+        </div>
+
+        <!-- Step 2: Partner Evaluation -->
+        <div id="step-2" class="card mb-8 hidden">
+            <h2 class="text-2xl font-semibold mb-4">🤝 الخطوة 2: هل شريكك مناسب؟</h2>
+            <p class="mb-4">إن كان لديك شريك محتمل، قيّمه:</p>
+            <div class="mb-4">
+                <label class="flex items-center mb-2">
+                    <input type="checkbox" id="pq1" class="form-checkbox h-5 w-5 text-blue-600" onchange="evaluatePartner()">
+                    <span class="ml-2 text-gray-300">لديه نماذج من أعمال سابقة يمكنني رؤيتها.</span>
+                </label>
+                <label class="flex items-center mb-2">
+                    <input type="checkbox" id="pq2" class="form-checkbox h-5 w-5 text-blue-600" onchange="evaluatePartner()">
+                    <span class="ml-2 text-gray-300">تواصلنا عبر مكالمة صوتية أو فيديو مرة واحدة على الأقل.</span>
+                </label>
+                <label class="flex items-center mb-2">
+                    <input type="checkbox" id="pq3" class="form-checkbox h-5 w-5 text-blue-600" onchange="evaluatePartner()">
+                    <span class="ml-2 text-gray-300">متفقون على نسب الملكية والأدوار بوضوح.</span>
+                </label>
+                <label class="flex items-center mb-2">
+                    <input type="checkbox" id="pq4" class="form-checkbox h-5 w-5 text-blue-600" onchange="evaluatePartner()">
+                    <span class="ml-2 text-gray-300">تخصصه يكمّل تخصصي (مطور + مسوق مثلاً).</span>
+                </label>
+            </div>
+            <button id="evaluate-partner-btn" class="btn-primary mb-4" onclick="evaluatePartner()">تقييم الشريك</button>
+            <div id="partner-feedback" class="p-3 rounded mt-4 text-sm"></div>
+
+            <div class="mt-8 pt-4 border-t border-gray-700">
+                <h3 class="text-xl font-semibold mb-4">ليس لديك شريك بعد؟</h3>
+                <p class="mb-2">صف لنا المهارة التي تنقصك:</p>
+                <select id="missing-skill" class="w-full p-2 rounded bg-gray-700 text-gray-100 mb-4">
+                    <option value="Frontend">Frontend</option>
+                    <option value="Backend">Backend</option>
+                    <option value="UI/UX Design">UI/UX Design</option>
+                    <option value="Marketing">تسويق</option>
+                    <option value="Other">أخرى</option>
+                </select>
+                <button id="register-need-btn" class="btn-secondary" onclick="registerMissingSkill()">سجّل احتياجي</button>
+                <div id="missing-skill-feedback" class="p-3 rounded mt-4 text-sm"></div>
+            </div>
+            <button class="btn-danger mt-4" onclick="prevStep()">→ السابقة</button>
+            <button id="to-step-3-from-2" class="btn-primary mt-4 float-left" onclick="nextStep()">التالي ←</button>
+        </div>
+
+        <!-- Step 3: Project Charter -->
+        <div id="step-3" class="card mb-8 hidden">
+            <h2 class="text-2xl font-semibold mb-4">📜 الخطوة 3: ميثاق المشروع</h2>
+            <p class="mb-4">املأ بيانات المشروع والشركاء لتوليد العقد البسيط:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="project-name-input" class="block text-gray-300 text-sm font-bold mb-2">اسم المشروع:</label>
+                    <input type="text" id="project-name-input" class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="اسم المشروع">
+                </div>
+                <div>
+                    <label for="project-desc-input" class="block text-gray-300 text-sm font-bold mb-2">وصف مختصر للمشروع:</label>
+                    <textarea id="project-desc-input" class="w-full p-2 rounded bg-gray-700 text-gray-100" rows="3" placeholder="وصف مختصر للمشروع"></textarea>
+                </div>
+                <div>
+                    <label for="project-duration-input" class="block text-gray-300 text-sm font-bold mb-2">المدة المتوقعة:</label>
+                    <input type="text" id="project-duration-input" class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="مثال: 3 أشهر">
+                </div>
+                <div>
+                    <label for="project-start-date-input" class="block text-gray-300 text-sm font-bold mb-2">تاريخ البدء:</label>
+                    <input type="date" id="project-start-date-input" class="w-full p-2 rounded bg-gray-700 text-gray-100">
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-4">الشركاء:</h3>
+            <div id="partners-container" class="mb-4">
+                <!-- Partner inputs will be added here dynamically -->
+            </div>
+            <button class="btn-secondary mb-4" onclick="addPartnerInput()">+ إضافة شريك</button>
+
+            <button id="generate-charter-btn" class="btn-primary mb-4" onclick="generateCharter()">📄 ولّد الميثاق</button>
+            <div id="charter-output" class="card p-4 mt-4 hidden">
+                <h3 class="text-xl font-semibold mb-2">📝 الميثاق جاهز</h3>
+                <pre id="charter-text" class="whitespace-pre-wrap text-gray-200"></pre>
+                <button class="btn-secondary mt-4" onclick="copyCharter()">📋 نسخ الميثاق</button>
+            </div>
+            <button class="btn-danger mt-4" onclick="prevStep()">→ السابقة</button>
+            <button id="to-step-4-from-3" class="btn-primary mt-4 float-left" onclick="nextStep()">الانتقال للوحة التحكم ←</button>
+        </div>
+
+        <!-- Step 4: Project Dashboard -->
+        <div id="step-4" class="card mb-8 hidden">
+            <h2 class="text-2xl font-semibold mb-4">📊 الخطوة 4: لوحة تحكم المشروع</h2>
+            <p class="text-yellow-500 text-sm text-center mb-4">⚠️ هذه البيانات محفوظة محلياً في متصفحك. لن تضيع عند إغلاق الصفحة، ولكنها غير متزامنة عبر الأجهزة.</p>
+
+            <!-- Project Details -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">تفاصيل المشروع</h3>
+                <p><strong class="text-blue-400">اسم المشروع:</strong> <span id="dashboard-project-name"></span></p>
+                <p><strong class="text-blue-400">الوصف:</strong> <span id="dashboard-project-description"></span></p>
+                <p><strong class="text-blue-400">المدة المتوقعة:</strong> <span id="dashboard-project-duration"></span></p>
+                <p><strong class="text-blue-400">تاريخ البدء:</strong> <span id="dashboard-project-start-date"></span></p>
+                <p><strong class="text-blue-400">التقدم الكلي:</strong> <span id="dashboard-overall-progress-text">0%</span></p>
+                <div class="progress-bar-container mt-2">
+                    <div id="dashboard-overall-progress-bar" class="progress-bar"></div>
+                </div>
+            </div>
+
+            <!-- Team Members -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">أعضاء الفريق</h3>
+                <div id="dashboard-team-members-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <button class="btn-secondary mt-4" onclick="addTeamMember()">+ إضافة عضو فريق</button>
+            </div>
+
+            <!-- Group Post Generator -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">مولد منشورات الجروب</h3>
+                <textarea id="group-post-output" class="w-full p-3 rounded bg-gray-700 text-gray-100 mb-4" rows="6" readonly></textarea>
+                <button id="generate-post-btn" class="btn-primary">توليد منشور حالة المشروع</button>
+                <button id="copy-post-btn" class="btn-secondary mr-2">نسخ المنشور</button>
+                <a id="open-group-link" href="#" target="_blank" class="btn-primary">فتح رابط الجروب</a>
+            </div>
+            <button class="btn-danger mt-4" onclick="prevStep()">→ السابقة</button>
+        </div>
+
+        <!-- Modals -->
+        <!-- Request Help Modal -->
+        <div id="request-help-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3 class="text-xl font-semibold mb-4">طلب مساعدة لعضو: <span id="help-member-name"></span></h3>
+                <label for="help-skill" class="block text-gray-300 text-sm font-bold mb-2">المهارة المطلوبة:</label>
+                <input type="text" id="help-skill" class="w-full p-2 rounded bg-gray-700 text-gray-100 mb-4" placeholder="مثال: مطور فرونت إند، مصمم UI/UX">
+                <label for="help-task" class="block text-gray-300 text-sm font-bold mb-2">وصف المهمة التي تحتاج مساعدة فيها:</label>
+                <textarea id="help-task" class="w-full p-2 rounded bg-gray-700 text-gray-100 mb-4" rows="4" placeholder="صف المهمة بوضوح..."></textarea>
+                <div class="flex justify-end">
+                    <button id="submit-help-request-btn" class="btn-primary">إرسال طلب المساعدة</button>
+                    <button id="cancel-help-request-btn" class="btn-danger mr-2">إلغاء</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Replace Member Modal -->
+        <div id="replace-member-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3 class="text-xl font-semibold mb-4">استبدال عضو: <span id="replace-member-name"></span></h3>
+                <p class="text-gray-400 mb-4">سيتم توليد منشور للجروب لطلب بديل لهذا العضو.</p>
+                <label for="replacement-reason" class="block text-gray-300 text-sm font-bold mb-2">سبب الاستبدال (اختياري):</label>
+                <textarea id="replacement-reason" class="w-full p-2 rounded bg-gray-700 text-gray-100 mb-4" rows="3" placeholder="مثال: انسحب العضو، لم يعد لديه وقت..."></textarea>
+                <label for="last-contribution" class="block text-gray-300 text-sm font-bold mb-2">آخر مساهمة للعضو المغادر (لتسهيل التسليم):</label>
+                <textarea id="last-contribution" class="w-full p-2 rounded bg-gray-700 text-gray-100 mb-4" rows="4" placeholder="مثال: أكمل تصميم الواجهة الرئيسية، توقف عند دمج API X..."></textarea>
+                <div class="flex justify-end">
+                    <button id="submit-replace-member-btn" class="btn-primary">توليد منشور الاستبدال</button>
+                    <button id="cancel-replace-member-btn" class="btn-danger mr-2">إلغاء</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Task Modal -->
+        <div id="add-task-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3 class="text-xl font-semibold mb-4">إضافة مهمة جديدة للعضو: <span id="add-task-member-name"></span></h3>
+                <label for="new-task-name" class="block text-gray-300 text-sm font-bold mb-2">اسم المهمة:</label>
+                <input type="text" id="new-task-name" class="w-full p-2 rounded bg-gray-700 text-gray-100 mb-4" placeholder="مثال: بناء صفحة الإعدادات">
+                <div class="flex justify-end">
+                    <button id="submit-add-task-btn" class="btn-primary">إضافة المهمة</button>
+                    <button id="cancel-add-task-btn" class="btn-danger mr-2">إلغاء</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Member Modal -->
+        <div id="add-member-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3 class="text-xl font-semibold mb-4">إضافة عضو فريق جديد</h3>
+                <label for="new-member-name" class="block text-gray-300 text-sm font-bold mb-2">اسم العضو:</label>
+                <input type="text" id="new-member-name" class="w-full p-2 rounded bg-gray-700 text-gray-100 mb-4" placeholder="مثال: علي">
+                <label for="new-member-role" class="block text-gray-300 text-sm font-bold mb-2">دور العضو:</label>
+                <input type="text" id="new-member-role" class="w-full p-2 rounded bg-gray-700 text-gray-100 mb-4" placeholder="مثال: مطور فرونت إند">
+                <div class="flex justify-end">
+                    <button id="submit-add-member-btn" class="btn-primary">إضافة العضو</button>
+                    <button id="cancel-add-member-btn" class="btn-danger mr-2">إلغاء</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let projectData = {
+            idea: {
+                iq1: false, iq2: false, iq3: false, iq4: false,
+                feedback: "", score: 0
+            },
+            partner: {
+                pq1: false, pq2: false, pq3: false, pq4: false,
+                feedback: "", score: 0,
+                missingSkill: "Frontend", missingSkillFeedback: ""
+            },
+            charter: {
+                projectName: "",
+                projectDescription: "",
+                projectDuration: "",
+                projectStartDate: "",
+                partners: [],
+                charterText: ""
+            },
+            dashboard: {
+                members: []
+            }
+        };
+
+        // Load data from localStorage
+        function loadProjectData() {
+            const savedData = localStorage.getItem("projectLabData");
+            if (savedData) {
+                projectData = JSON.parse(savedData);
+                currentStep = parseInt(localStorage.getItem("currentStep") || "1");
+            }
+        }
+
+        // Save data to localStorage
+        function saveProjectData() {
+            localStorage.setItem("projectLabData", JSON.stringify(projectData));
+            localStorage.setItem("currentStep", currentStep.toString());
+        }
+
+        // Render current step
+        function renderStep() {
+            document.querySelectorAll("[id^=\'step-\'\]").forEach(stepDiv => {
+                stepDiv.classList.add("hidden");
+            });
+            document.getElementById(`step-${currentStep}`).classList.remove("hidden");
+
+            document.querySelectorAll(".step-indicator").forEach(indicator => {
+                indicator.classList.remove("active", "completed");
+            });
+            for (let i = 1; i <= currentStep; i++) {
+                document.getElementById(`step-${i}-indicator`).classList.add("completed");
+            }
+            if (currentStep === 4) {
+                document.getElementById(`step-${currentStep}-indicator`).classList.add("completed");
+            } else {
+                document.getElementById(`step-${currentStep}-indicator`).classList.add("active");
+            }
+
+            // Re-render content for the current step
+            if (currentStep === 1) {
+                renderIdeaEvaluation();
+            } else if (currentStep === 2) {
+                renderPartnerEvaluation();
+            } else if (currentStep === 3) {
+                renderCharterForm();
+            } else if (currentStep === 4) {
+                renderDashboard();
+            }
+            saveProjectData();
+        }
+
+        function nextStep() {
+            if (currentStep < 4) {
+                currentStep++;
+                renderStep();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                renderStep();
+            }
+        }
+
+        // --- Step 1: Idea Evaluation Logic ---
+        function renderIdeaEvaluation() {
+            document.getElementById("iq1").checked = projectData.idea.iq1;
+            document.getElementById("iq2").checked = projectData.idea.iq2;
+            document.getElementById("iq3").checked = projectData.idea.iq3;
+            document.getElementById("iq4").checked = projectData.idea.iq4;
+            document.getElementById("idea-feedback").innerHTML = projectData.idea.feedback;
+            if (projectData.idea.feedback) {
+                document.getElementById("idea-feedback").classList.remove("hidden");
+            } else {
+                document.getElementById("idea-feedback").classList.add("hidden");
+            }
+        }
+
+        function evaluateIdea() {
+            projectData.idea.iq1 = document.getElementById("iq1").checked;
+            projectData.idea.iq2 = document.getElementById("iq2").checked;
+            projectData.idea.iq3 = document.getElementById("iq3").checked;
+            projectData.idea.iq4 = document.getElementById("iq4").checked;
+
+            let score = 0;
+            if (projectData.idea.iq1) score++;
+            if (projectData.idea.iq2) score++;
+            if (projectData.idea.iq3) score++;
+            if (projectData.idea.iq4) score++;
+            projectData.idea.score = score;
+
+            let feedbackDiv = document.getElementById("idea-feedback");
+            feedbackDiv.classList.remove("hidden");
+            if (score === 4) {
+                feedbackDiv.className = "p-3 rounded mt-4 text-sm bg-green-700";
+                projectData.idea.feedback = `✅ فكرتك قوية جداً! الدرجة: ${score} / 4. انطلق للبناء!`;
+            } else if (score >= 2) {
+                feedbackDiv.className = "p-3 rounded mt-4 text-sm bg-yellow-700";
+                projectData.idea.feedback = `⚠️ فكرتك واعدة، لكن تحتاج لبعض التحقق. الدرجة: ${score} / 4.`;
+            } else {
+                feedbackDiv.className = "p-3 rounded mt-4 text-sm bg-red-700";
+                projectData.idea.feedback = `🔴 فكرتك تحتاج إلى "Refactor" في مرحلة التحقق. الدرجة: ${score} / 4. تحدث مع عملاء محتملين أولاً.`;
+            }
+            feedbackDiv.innerHTML = projectData.idea.feedback;
+            saveProjectData();
+        }
+
+        // --- Step 2: Partner Evaluation Logic ---
+        function renderPartnerEvaluation() {
+            document.getElementById("pq1").checked = projectData.partner.pq1;
+            document.getElementById("pq2").checked = projectData.partner.pq2;
+            document.getElementById("pq3").checked = projectData.partner.pq3;
+            document.getElementById("pq4").checked = projectData.partner.pq4;
+            document.getElementById("partner-feedback").innerHTML = projectData.partner.feedback;
+            if (projectData.partner.feedback) {
+                document.getElementById("partner-feedback").classList.remove("hidden");
+            } else {
+                document.getElementById("partner-feedback").classList.add("hidden");
+            }
+            document.getElementById("missing-skill").value = projectData.partner.missingSkill;
+            document.getElementById("missing-skill-feedback").innerHTML = projectData.partner.missingSkillFeedback;
+            if (projectData.partner.missingSkillFeedback) {
+                document.getElementById("missing-skill-feedback").classList.remove("hidden");
+            } else {
+                document.getElementById("missing-skill-feedback").classList.add("hidden");
+            }
+        }
+
+        function evaluatePartner() {
+            projectData.partner.pq1 = document.getElementById("pq1").checked;
+            projectData.partner.pq2 = document.getElementById("pq2").checked;
+            projectData.partner.pq3 = document.getElementById("pq3").checked;
+            projectData.partner.pq4 = document.getElementById("pq4").checked;
+
+            let score = 0;
+            if (projectData.partner.pq1) score++;
+            if (projectData.partner.pq2) score++;
+            if (projectData.partner.pq3) score++;
+            if (projectData.partner.pq4) score++;
+            projectData.partner.score = score;
+
+            let feedbackDiv = document.getElementById("partner-feedback");
+            feedbackDiv.classList.remove("hidden");
+            if (score === 4) {
+                feedbackDiv.className = "p-3 rounded mt-4 text-sm bg-green-700";
+                projectData.partner.feedback = `✅ شريكك يبدو مناسباً جداً! الدرجة: ${score} / 4.`;
+            } else if (score >= 2) {
+                feedbackDiv.className = "p-3 rounded mt-4 text-sm bg-yellow-700";
+                projectData.partner.feedback = `⚠️ شريكك واعد، لكن تأكد من بعض الجوانب. الدرجة: ${score} / 4.`;
+            } else {
+                feedbackDiv.className = "p-3 rounded mt-4 text-sm bg-red-700";
+                projectData.partner.feedback = `🔴 توخَّ الحذر. لا تتسرع في الشراكة قبل التحقق من تاريخه والتزامه. الدرجة: ${score} / 4.`;
+            }
+            feedbackDiv.innerHTML = projectData.partner.feedback;
+            saveProjectData();
+        }
+
+        function registerMissingSkill() {
+            const skill = document.getElementById("missing-skill").value;
+            projectData.partner.missingSkill = skill;
+            let feedbackDiv = document.getElementById("missing-skill-feedback");
+            feedbackDiv.classList.remove("hidden");
+            feedbackDiv.className = "p-3 rounded mt-4 text-sm bg-green-700";
+            projectData.partner.missingSkillFeedback = `✅ تم تسجيل احتياجك لمهارة "${skill}". عندما ينضم عضو جديد إلى مجتمعنا بهذه المهارة، سنعلمك. تابع المجموعة!`;
+            feedbackDiv.innerHTML = projectData.partner.missingSkillFeedback;
+            saveProjectData();
+        }
+
+        // --- Step 3: Project Charter Logic ---
+        function renderCharterForm() {
+            document.getElementById("project-name-input").value = projectData.charter.projectName;
+            document.getElementById("project-desc-input").value = projectData.charter.projectDescription;
+            document.getElementById("project-duration-input").value = projectData.charter.projectDuration;
+            document.getElementById("project-start-date-input").value = projectData.charter.projectStartDate;
+            renderPartnersInput();
+            document.getElementById("charter-text").textContent = projectData.charter.charterText;
+            if (projectData.charter.charterText) {
+                document.getElementById("charter-output").classList.remove("hidden");
+            } else {
+                document.getElementById("charter-output").classList.add("hidden");
+            }
+        }
+
+        function addPartnerInput() {
+            projectData.charter.partners.push({ id: Date.now(), name: "", role: "", share: 0 });
+            renderPartnersInput();
+            saveProjectData();
+        }
+
+        function removePartnerInput(id) {
+            projectData.charter.partners = projectData.charter.partners.filter(p => p.id !== id);
+            renderPartnersInput();
+            saveProjectData();
+        }
+
+        function renderPartnersInput() {
+            const container = document.getElementById("partners-container");
+            container.innerHTML = "";
+            projectData.charter.partners.forEach(partner => {
+                const div = document.createElement("div");
+                div.className = "grid grid-cols-1 md:grid-cols-4 gap-2 mb-2 p-2 border border-gray-600 rounded";
+                div.innerHTML = `
+                    <input type="text" class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="اسم الطرف" value="${partner.name}" onchange="updatePartnerData(${partner.id}, \'name\', this.value)">
+                    <input type="text" class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="دوره" value="${partner.role}" onchange="updatePartnerData(${partner.id}, \'role\', this.value)">
+                    <input type="number" class="w-full p-2 rounded bg-gray-700 text-gray-100" placeholder="نسبة حصته (%)" value="${partner.share}" onchange="updatePartnerData(${partner.id}, \'share\', parseInt(this.value))">
+                    <button class="btn-danger" onclick="removePartnerInput(${partner.id})">حذف</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function updatePartnerData(id, field, value) {
+            const partner = projectData.charter.partners.find(p => p.id === id);
+            if (partner) {
+                partner[field] = value;
+                saveProjectData();
+            }
+        }
+
+        function generateCharter() {
+            projectData.charter.projectName = document.getElementById("project-name-input").value;
+            projectData.charter.projectDescription = document.getElementById("project-desc-input").value;
+            projectData.charter.projectDuration = document.getElementById("project-duration-input").value;
+            projectData.charter.projectStartDate = document.getElementById("project-start-date-input").value;
+
+            let charterText = `📜 ميثاق المشروع المشترك\n─────────────────────────\nالتاريخ: ${new Date().toLocaleDateString("ar-EG")}\n\nبين:\n`;
+            projectData.charter.partners.forEach((p, index) => {
+                charterText += `${index + 1}. ${p.name} – ${p.role} – الحصة: ${p.share}%\n`;
+            });
+
+            charterText += `\nالمشروع: ${projectData.charter.projectName}\nالوصف: ${projectData.charter.projectDescription}\nالمدة المتوقعة: ${projectData.charter.projectDuration}\nتاريخ البدء: ${projectData.charter.projectStartDate}\n\nمبادئ التعاون:\n• كل طرف يلتزم بإنجاز المهام الموكلة إليه.\n• القرارات الكبرى تُتخذ بالإجماع.\n• الانسحاب دون إنجاز = تنازل عن الحصة.\n• الخلافات تُحل وديًا، والملاذ الأخير إدارة "مبرمجون يغيرون قواعد اللعبة".\n\nهذا ميثاق أخلاقي واجتماعي، وموقع عليه من الأطراف.\n─────────────────────────\nبُوِّئ بواسطة مختبر المشاريع`;
+
+            document.getElementById("charter-text").textContent = charterText;
+            projectData.charter.charterText = charterText;
+            document.getElementById("charter-output").classList.remove("hidden");
+            saveProjectData();
+
+            // Prepare dashboard data from charter (only if members list is empty to avoid overwriting existing tasks)
+            if (projectData.dashboard.members.length === 0) {
+                projectData.dashboard.members = projectData.charter.partners.map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    role: p.role,
+                    tasks: [] // Start with empty tasks
+                }));
+                saveProjectData();
+            }
+        }
+
+        function copyCharter() {
+            const charterText = document.getElementById("charter-text");
+            navigator.clipboard.writeText(charterText.textContent)
+                .then(() => alert("تم نسخ الميثاق إلى الحافظة!"))
+                .catch(err => console.error("فشل في نسخ الميثاق: ", err));
+        }
+
+        // --- Step 4: Project Dashboard Logic ---
+        function renderDashboard() {
+            document.getElementById("dashboard-project-name").textContent = projectData.charter.projectName;
+            document.getElementById("dashboard-project-description").textContent = projectData.charter.projectDescription;
+            document.getElementById("dashboard-project-duration").textContent = projectData.charter.projectDuration;
+            document.getElementById("dashboard-project-start-date").textContent = projectData.charter.projectStartDate;
+            updateOverallProgress();
+            renderTeamMembersDashboard();
+        }
+
+        function calculateOverallProgress() {
+            let totalProgress = 0;
+            let totalTasks = 0;
+            projectData.dashboard.members.forEach(member => {
+                member.tasks.forEach(task => {
+                    totalProgress += task.progress;
+                    totalTasks++;
+                });
+            });
+            return totalTasks > 0 ? Math.round(totalProgress / totalTasks) : 0;
+        }
+
+        function updateOverallProgress() {
+            const overallProgress = calculateOverallProgress();
+            document.getElementById("dashboard-overall-progress-text").textContent = `${overallProgress}%`;
+            document.getElementById("dashboard-overall-progress-bar").style.width = `${overallProgress}%`;
+            saveProjectData();
+        }
+
+        function renderTeamMembersDashboard() {
+            const container = document.getElementById("dashboard-team-members-container");
+            container.innerHTML = "";
+
+            projectData.dashboard.members.forEach(member => {
+                const memberCard = document.createElement("div");
+                memberCard.className = "card";
+                memberCard.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-2">${member.name}</h3>
+                    <p class="text-blue-300 mb-2">${member.role}</p>
+                    <h4 class="font-medium mt-4 mb-2">المهام:</h4>
+                    <ul class="list-disc list-inside mb-4" id="dashboard-tasks-${member.id}"></ul>
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <button class="btn-primary request-help-btn" data-member-id="${member.id}">طلب مساعدة</button>
+                        <button class="btn-danger replace-member-btn" data-member-id="${member.id}">استبدال عضو</button>
+                        <button class="btn-secondary add-task-btn" data-member-id="${member.id}">إضافة مهمة</button>
+                    </div>
+                `;
+                container.appendChild(memberCard);
+
+                const tasksList = document.getElementById(`dashboard-tasks-${member.id}`);
+                member.tasks.forEach(task => {
+                    const taskItem = document.createElement("li");
+                    let statusColor = "";
+                    let statusText = "";
+                    if (task.status === "completed") {
+                        statusColor = "text-green-400";
+                        statusText = "مكتمل";
+                    } else if (task.status === "in-progress") {
+                        statusColor = "text-yellow-400";
+                        statusText = "قيد التقدم";
+                    } else {
+                        statusColor = "text-red-400";
+                        statusText = "لم يبدأ";
+                    }
+                    taskItem.innerHTML = `
+                        ${task.name} (<span class="${statusColor}">${statusText} - ${task.progress}%</span>)
+                        <select class="task-status-select bg-gray-700 rounded p-1 text-sm mr-2" data-member-id="${member.id}" data-task-name="${task.name}">
+                            <option value="not-started" ${task.status === "not-started" ? "selected" : ""}>لم يبدأ</option>
+                            <option value="in-progress" ${task.status === "in-progress" ? "selected" : ""}>قيد التقدم</option>
+                            <option value="completed" ${task.status === "completed" ? "selected" : ""}>مكتمل</option>
+                        </select>
+                        <input type="number" min="0" max="100" value="${task.progress}" class="task-progress-input bg-gray-700 rounded p-1 text-sm w-16" data-member-id="${member.id}" data-task-name="${task.name}">
+                        <button class="btn-danger text-xs p-1 rounded ml-2" onclick="removeTask(${member.id}, \'${task.name}\')">حذف</button>
+                    `;
+                    tasksList.appendChild(taskItem);
+                });
+            });
+
+            addEventListenersToDashboardControls();
+            addEventListenersToModals();
+        }
+
+        function addTeamMember() {
+            const addMemberModal = document.getElementById("add-member-modal");
+            addMemberModal.classList.remove("hidden");
+        }
+
+        document.getElementById("submit-add-member-btn").addEventListener("click", () => {
+            const newMemberName = document.getElementById("new-member-name").value;
+            const newMemberRole = document.getElementById("new-member-role").value;
+            if (newMemberName && newMemberRole) {
+                projectData.dashboard.members.push({
+                    id: Date.now(),
+                    name: newMemberName,
+                    role: newMemberRole,
+                    tasks: []
+                });
+                document.getElementById("new-member-name").value = "";
+                document.getElementById("new-member-role").value = "";
+                document.getElementById("add-member-modal").classList.add("hidden");
+                renderTeamMembersDashboard();
+                saveProjectData();
+            } else {
+                alert("الرجاء إدخال اسم ودور العضو الجديد.");
+            }
+        });
+
+        document.getElementById("cancel-add-member-btn").addEventListener("click", () => {
+            document.getElementById("add-member-modal").classList.add("hidden");
+        });
+
+        let currentMemberIdForTaskModal = null;
+        function addEventListenersToDashboardControls() {
+            document.querySelectorAll(".task-status-select").forEach(select => {
+                select.onchange = (e) => {
+                    const memberId = parseInt(e.target.dataset.memberId);
+                    const taskName = e.target.dataset.taskName;
+                    const newStatus = e.target.value;
+                    updateTaskStatus(memberId, taskName, newStatus);
+                };
+            });
+
+            document.querySelectorAll(".task-progress-input").forEach(input => {
+                input.onchange = (e) => {
+                    const memberId = parseInt(e.target.dataset.memberId);
+                    const taskName = e.target.dataset.taskName;
+                    const newProgress = parseInt(e.target.value);
+                    updateTaskProgress(memberId, taskName, newProgress);
+                };
+            });
+
+            document.querySelectorAll(".add-task-btn").forEach(button => {
+                button.onclick = (e) => {
+                    currentMemberIdForTaskModal = parseInt(e.target.dataset.memberId);
+                    const member = projectData.dashboard.members.find(m => m.id === currentMemberIdForTaskModal);
+                    document.getElementById("add-task-member-name").textContent = member.name;
+                    document.getElementById("add-task-modal").classList.remove("hidden");
+                };
+            });
+        }
+
+        function updateTaskStatus(memberId, taskName, newStatus) {
+            const member = projectData.dashboard.members.find(m => m.id === memberId);
+            if (member) {
+                const task = member.tasks.find(t => t.name === taskName);
+                if (task) {
+                    task.status = newStatus;
+                    if (newStatus === "completed") {
+                        task.progress = 100;
+                    } else if (newStatus === "not-started") {
+                        task.progress = 0;
+                    }
+                    renderTeamMembersDashboard();
+                    updateOverallProgress();
+                }
+            }
+        }
+
+        function updateTaskProgress(memberId, taskName, newProgress) {
+            const member = projectData.dashboard.members.find(m => m.id === memberId);
+            if (member) {
+                const task = member.tasks.find(t => t.name === taskName);
+                if (task) {
+                    task.progress = newProgress;
+                    if (newProgress === 100) {
+                        task.status = "completed";
+                    } else if (newProgress > 0 && newProgress < 100) {
+                        task.status = "in-progress";
+                    } else {
+                        task.status = "not-started";
+                    }
+                    renderTeamMembersDashboard();
+                    updateOverallProgress();
+                }
+            }
+        }
+
+        function removeTask(memberId, taskName) {
+            const member = projectData.dashboard.members.find(m => m.id === memberId);
+            if (member) {
+                member.tasks = member.tasks.filter(task => task.name !== taskName);
+                renderTeamMembersDashboard();
+                updateOverallProgress();
+                saveProjectData();
+            }
+        }
+
+        document.getElementById("submit-add-task-btn").addEventListener("click", () => {
+            const newTaskName = document.getElementById("new-task-name").value;
+            if (newTaskName && currentMemberIdForTaskModal) {
+                const member = projectData.dashboard.members.find(m => m.id === currentMemberIdForTaskModal);
+                if (member) {
+                    member.tasks.push({ name: newTaskName, status: "not-started", progress: 0 });
+                    document.getElementById("new-task-name").value = "";
+                    document.getElementById("add-task-modal").classList.add("hidden");
+                    renderTeamMembersDashboard();
+                    updateOverallProgress();
+                    saveProjectData();
+                }
+            } else {
+                alert("الرجاء إدخال اسم المهمة.");
+            }
+        });
+
+        document.getElementById("cancel-add-task-btn").addEventListener("click", () => {
+            document.getElementById("add-task-modal").classList.add("hidden");
+        });
+
+        // Modals Logic (Help and Replace)
+        const requestHelpModal = document.getElementById("request-help-modal");
+        const replaceMemberModal = document.getElementById("replace-member-modal");
+        const helpMemberNameSpan = document.getElementById("help-member-name");
+        const replaceMemberNameSpan = document.getElementById("replace-member-name");
+        let currentMemberIdForModal = null;
+
+        function addEventListenersToModals() {
+            document.querySelectorAll(".request-help-btn").forEach(button => {
+                button.onclick = (e) => {
+                    currentMemberIdForModal = parseInt(e.target.dataset.memberId);
+                    const member = projectData.dashboard.members.find(m => m.id === currentMemberIdForModal);
+                    if (member) {
+                        helpMemberNameSpan.textContent = member.name;
+                        requestHelpModal.classList.remove("hidden");
+                    }
+                };
+            });
+
+            document.querySelectorAll(".replace-member-btn").forEach(button => {
+                button.onclick = (e) => {
+                    currentMemberIdForModal = parseInt(e.target.dataset.memberId);
+                    const member = projectData.dashboard.members.find(m => m.id === currentMemberIdForModal);
+                    if (member) {
+                        replaceMemberNameSpan.textContent = member.name;
+                        replaceMemberModal.classList.remove("hidden");
+                    }
+                };
+            });
+
+            document.getElementById("cancel-help-request-btn").onclick = () => {
+                requestHelpModal.classList.add("hidden");
+            };
+
+            document.getElementById("cancel-replace-member-btn").onclick = () => {
+                replaceMemberModal.classList.add("hidden");
+            };
+
+            document.getElementById("submit-help-request-btn").onclick = () => {
+                const member = projectData.dashboard.members.find(m => m.id === currentMemberIdForModal);
+                const skill = document.getElementById("help-skill").value;
+                const taskDesc = document.getElementById("help-task").value;
+                const today = new Date().toLocaleDateString("ar-EG");
+                const post = `🚨 طلب مساعدة في مشروع "${projectData.charter.projectName}" 🚨\n📅 تاريخ الطلب: ${today}\n\nالعضو: ${member.name} (${member.role})\nيحتاج مساعدة في: ${taskDesc || "مهمة غير محددة"}\nالمهارة المطلوبة: ${skill || "غير محددة"}\n\nيرجى من أعضاء الجروب الكرام ممن لديهم الخبرة التواصل مع ${member.name} للمساعدة!\n#مساعدة_مشروع #مبرمجون_يغيرون_قواعد_اللعبة`;
+                document.getElementById("group-post-output").value = post;
+                requestHelpModal.classList.add("hidden");
+                alert("تم توليد منشور طلب المساعدة في مربع \"مولد منشورات الجروب\". يمكنك نسخه ونشره.");
+            };
+
+            document.getElementById("submit-replace-member-btn").onclick = () => {
+                const member = projectData.dashboard.members.find(m => m.id === currentMemberIdForModal);
+                const reason = document.getElementById("replacement-reason").value;
+                const lastContribution = document.getElementById("last-contribution").value;
+                const today = new Date().toLocaleDateString("ar-EG");
+                const post = `🔄 طلب استبدال عضو في مشروع "${projectData.charter.projectName}" 🔄\n📅 تاريخ الطلب: ${today}\n\nالعضو المغادر: ${member.name} (${member.role})\nسبب الاستبدال: ${reason || "غير مذكور"}\nآخر مساهمة للعضو: ${lastContribution || "غير مذكورة"}\n\nنبحث عن عضو جديد بنفس التخصص (${member.role}) للمساهمة في المشروع من حيث توقف العضو السابق. يرجى التواصل مع إدارة المشروع أو الفريق مباشرة.\n#استبدال_عضو #مبرمجون_يغيرون_قواعد_اللعبة`;
+                document.getElementById("group-post-output").value = post;
+                replaceMemberModal.classList.add("hidden");
+                alert("تم توليد منشور طلب الاستبدال في مربع \"مولد منشورات الجروب\". يمكنك نسخه ونشره.");
+            };
+        }
+
+        // Group Post Generator Logic
+        document.getElementById("generate-post-btn").addEventListener("click", () => {
+            const overallProgress = calculateOverallProgress();
+            let post = `✨ تحديث مشروع "${projectData.charter.projectName}" ✨\n\nالتقدم الكلي للمشروع: ${overallProgress}%\n\nأبرز المهام الجارية:\n`;
+            projectData.dashboard.members.forEach(member => {
+                member.tasks.filter(task => task.status === "in-progress").forEach(task => {
+                    post += `- ${member.name} (${member.role}): ${task.name} (${task.progress}%)\n`;
+                });
+            });
+            if (projectData.dashboard.members.every(member => member.tasks.every(task => task.status === "completed"))) {
+                post += `\n🎉 تهانينا! تم إكمال المشروع بنجاح!`;
+            } else if (projectData.dashboard.members.every(member => member.tasks.length === 0)) {
+                post += `\n(لا توجد مهام جارية حالياً.)`;
+            }
+            const today = new Date().toLocaleDateString("ar-EG");
+            post += `\n\n📅 تاريخ التحديث: ${today}\nتابعوا تقدمنا وادعمونا!\n#تحديث_مشروع #مبرمجون_يغيرون_قواعد_اللعبة`;
+            document.getElementById("group-post-output").value = post;
+        });
+
+        document.getElementById("copy-post-btn").addEventListener("click", () => {
+            const textarea = document.getElementById("group-post-output");
+            navigator.clipboard.writeText(textarea.value)
+                .then(() => alert("تم نسخ المنشور إلى الحافظة!"))
+                .catch(err => console.error("فشل في نسخ المنشور: ", err));
+        });
+
+        const GROUP_LINK = "https://www.facebook.com/share/g/1cHem9raEi/"; // **هام: استبدل هذا الرابط برابط مجموعتك الحقيقي**
+
+        document.getElementById("open-group-link").href = GROUP_LINK;
+
+        // Initial Load
+        loadProjectData();
+        renderStep();
+    </script>
+</body>
+</html>
